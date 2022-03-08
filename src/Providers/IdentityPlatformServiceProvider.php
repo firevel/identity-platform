@@ -20,7 +20,7 @@ class IdentityPlatformServiceProvider extends ServiceProvider
         $this->app->singleton(IdentityPlatformService::class, function ($app) {
             $identityPlatform = new IdentityPlatformService(
                 config('identityplatform.api'),
-                app(Google\Auth\ApplicationDefaultCredentials::class)->getCredentials()->fetchAuthToken()
+                app(\Google\Auth\ApplicationDefaultCredentials::class)->getCredentials()->fetchAuthToken()['access_token']
             );
             if (! empty(config('identityplatform.project_id'))) {
                 $identityPlatform->setProject(config('identityplatform.project_id'));
