@@ -77,8 +77,14 @@ class IdentityPlatformService
 			$options['hashAlgorithm'] = config('identityplatform.algorithm');
 		}
 
-		return $this->call('POST', 'accounts:batchCreate', $users);
+		$payload = $options;
+		$payload['users'] = $users;
 
+		return $this->call(
+			'POST',
+			'accounts:batchCreate',
+			$users
+		);
 	}
 
 	/**

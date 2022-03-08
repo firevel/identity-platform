@@ -5,6 +5,7 @@ namespace Firevel\IdentityPlatform\Commands;
 use Firevel\IdentityPlatform\Services\IdentityPlatformService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use IdentityPlatform;
 
 class IdentityPlatformBatchCreate extends Command
 {
@@ -37,7 +38,7 @@ class IdentityPlatformBatchCreate extends Command
                 function($users) use($tenant) {
                     $users->transform(function ($user) use($tenant) {
                         if (method_exists($user, 'toFirebaseUser')) {
-                            $userData = $this->toFirebaseUser();
+                            $userData = $user->toFirebaseUser();
                         } else {
                             $userData = [
                                 'localId' => $user->id,
@@ -46,12 +47,19 @@ class IdentityPlatformBatchCreate extends Command
                                 'passwordHash' => $user->password,
                             ];
                         }
+
                         if (!empty($tenant)) {
                             $userData['tenantId'] = $tenant;
                         }
+
                         return $userData;
                     });
-                    IdentityPlatform::batchCreate($users);
+
+                    $options = [];
+                    if (!empty($tenant)) {
+                        $options['tenantId'] = $tenant;
+                    }
+                    IdentityPlatform::batchCreate($users, $options);
                 }
             );
         return 0;
