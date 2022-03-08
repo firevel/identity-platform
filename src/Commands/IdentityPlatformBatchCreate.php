@@ -44,7 +44,7 @@ class IdentityPlatformBatchCreate extends Command
                                 'localId' => $user->id,
                                 'email' => $user->email,
                                 'displayName' => $user->name,
-                                'passwordHash' => $user->password,
+                                'passwordHash' => base64_encode($user->password),
                             ];
                         }
 

@@ -83,7 +83,7 @@ class IdentityPlatformService
 		return $this->call(
 			'POST',
 			'accounts:batchCreate',
-			$users
+			$payload
 		);
 	}
 
@@ -99,19 +99,21 @@ class IdentityPlatformService
 		$url = $this->getApi();
 
 		if ($this->hasProject()) {
-			$url = $url . '/' . $this->getProject;
+			$url = $url . 'projects/' . $this->getProject();
 		}
 
 		$url = $url . '/' . $endpoint;
 
-        return $client->request(
-            $method,
-            $url,
-            [
-                'json' => $payload,
-                'headers' => [ 'Authorization' => 'Bearer ' . $token ],
-            ]
-        );		
+        return $this
+        	->getClient()
+        	->request(
+	            $method,
+	            $url,
+	            [
+	                'json' => $payload,
+	                'headers' => [ 'Authorization' => 'Bearer ' . $this->getToken() ],
+	            ]
+	        );
 	}
 
     /**
